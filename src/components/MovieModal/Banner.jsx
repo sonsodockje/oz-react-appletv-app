@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./styles/Banner.css";
-import axios from "../../api/axios";
 import requests from "../../api/requests";
 import styled from "styled-components";
+import instance from "../../api/axios";
 
 const Banner = () => {
   const [movie, setMovie] = useState({});
@@ -13,7 +13,7 @@ const Banner = () => {
   }, []);
 
   const fetchData = async () => {
-    const request = await axios.get(requests.fetchNowPlaying);
+    const request = await instance.get(requests.fetchNowPlaying);
     console.log("리퀘스트", request);
     const movieId =
       request.data.results[
@@ -21,7 +21,7 @@ const Banner = () => {
       ].id;
     console.log("아이디", movieId);
 
-    const { data: movieDetail } = await axios.get(`movie/${movieId}`, {
+    const { data: movieDetail } = await instance.get(`movie/${movieId}`, {
       params: { append_tp_response: "videos" },
     });
     setMovie(movieDetail);
