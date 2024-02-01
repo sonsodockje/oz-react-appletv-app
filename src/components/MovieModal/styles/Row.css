@@ -76,8 +76,8 @@
 }
 
 .row_poster {
+  width: 100vw; /*여기 100%으로 하니까 쪼끄매짐*/
   object-fit: contain;
-  width: 100%;
   max-height: 144px;
   margin-right: 10px;
   transition: transform 450ms;
