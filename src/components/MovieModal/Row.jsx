@@ -25,7 +25,13 @@ const Row = ({ title, id, fetchUrl }) => {
     <div>
       <h2>{title}</h2>
       <div className="slider">
-        <div className="slider_arrow-left">
+        <div
+          className="slider_arrow-left"
+          onClick={(e) => {
+            console.log(e.target);
+            document.getElementById(id).scrollLeft -= window.innerWidth - 80;
+          }}
+        >
           <span className="arrow">{"<"}</span>
         </div>
         <div id={id} className="row_posters">
@@ -35,11 +41,17 @@ const Row = ({ title, id, fetchUrl }) => {
               className="row_poster"
               src={`https://image.tmdb.org/t/p/original/${e.backdrop_path}`}
               alt={e.name}
-              onClick={() => handleClick(movie)}
+              //   onClick={() => handleClick(movie)}
             />
           ))}
         </div>
-        <div className="slider_arrow-right">
+        <div
+          className="slider_arrow-right"
+          onClick={(e) => {
+            console.log(e.target);
+            document.getElementById(id).scrollLeft += window.innerWidth - 80;
+          }}
+        >
           <span className="arrow">{">"}</span>
         </div>
       </div>

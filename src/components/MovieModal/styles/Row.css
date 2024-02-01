@@ -69,12 +69,11 @@
   overflow-y: hidden;
   padding: 20px 0 20px 20px;
   scroll-behavior: smooth;
+  scrollbar-width: none; /*파이어폭스용*/
 }
-
 .row_posters::-webkit-scrollbar {
   display: none;
 }
-
 .row_poster {
   width: 100vw; /*여기 100%으로 하니까 쪼끄매짐*/
   object-fit: contain;
@@ -83,11 +82,9 @@
   transition: transform 450ms;
   border-radius: 4px;
 }
-
 .row_poster:hover {
   transform: scale(1.08);
 }
-
 .row_posterLarge {
   max-height: 320px;
 }
