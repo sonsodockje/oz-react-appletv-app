@@ -1,9 +1,12 @@
-import instance from "../../api/axios";
+import instance from "../api/axios";
+import MovieModal from "./MovieModal";
 import "./styles/Row.css";
 import { useCallback, useState, useEffect } from "react";
 
 const Row = ({ title, id, fetchUrl }) => {
   const [movies, setMovie] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [movieSelected, setMovieSelected] = useState({});
 
   const handleClick = (movie) => {
     setModalOpen(true);
@@ -13,12 +16,12 @@ const Row = ({ title, id, fetchUrl }) => {
   useEffect(() => {
     const fetchMovieData = async () => {
       const response = await instance.get(fetchUrl);
-      console.log("백드롭 주소", response.data.results[0].backdrop_path);
-      console.log("response.data.results : ", response.data.results);
+      // console.log("백드롭 주소", response.data.results[0].backdrop_path);
+      // console.log("response.data.results : ", response.data.results);
       setMovie(response.data.results);
     };
     fetchMovieData();
-    console.log("무비스", movies);
+    // console.log("무비스", movies);
   }, [fetchUrl]);
 
   return (
@@ -41,7 +44,7 @@ const Row = ({ title, id, fetchUrl }) => {
               className="row_poster"
               src={`https://image.tmdb.org/t/p/original/${e.backdrop_path}`}
               alt={e.name}
-              //   onClick={() => handleClick(movie)}
+              onClick={() => handleClick(e)}
             />
           ))}
         </div>
@@ -55,6 +58,10 @@ const Row = ({ title, id, fetchUrl }) => {
           <span className="arrow">{">"}</span>
         </div>
       </div>
+
+      {modalOpen && (
+        <MovieModal {...movieSelected} setModalOpen={setModalOpen} />
+      )}
     </div>
   );
 };
