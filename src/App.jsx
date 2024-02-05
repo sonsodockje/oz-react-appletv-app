@@ -1,37 +1,33 @@
-import styled from "styled-components";
+import { Outlet, Route, Routes } from "react-router-dom";
 import Nav from "./components/Nav";
-import Banner from "./components/Banner";
-import Row from "./components/Row";
-import requests from "./api/requests";
+import LoginPage from "./pages/LoginPage";
+import MainPage from "./pages/MainPage";
+import DetailPage from "./pages/DetailPage";
+import SearchPage from "./pages/SearchPage";
+
+const Layout = () => {
+  return (
+    <>
+      <Nav />
+      <Outlet />
+    </>
+  );
+};
 
 function App() {
   return (
     <>
-      <Container>
-        <Nav />
-        <Banner />
-        <Row title="Tending Now" id="TN" fetchUrl={requests.fetchTrending} />
-        <Row title="Top Rated" id="TR" fetchUrl={requests.fetchTopRated} />
-        <Row
-          title="Action Movie"
-          id="AM"
-          fetchUrl={requests.fetchActionMovies}
-        />
-        <Row
-          title="Comedy Movie"
-          id="CM"
-          fetchUrl={requests.fetchComedyMovies}
-        />
-      </Container>
+      {" "}
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<LoginPage />} />
+          <Route path="main" element={<MainPage />} />
+          <Route path=":movieId" element={<DetailPage />} />
+          <Route path="search" element={<SearchPage />} />
+        </Route>
+      </Routes>
     </>
   );
 }
-
-const Container = styled.main`
-  position: relative;
-  display: block;
-  top: 70px;
-  padding: 0 calc(3.5vw + 5px);
-`;
 
 export default App;
