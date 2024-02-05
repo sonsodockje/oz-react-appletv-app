@@ -1,7 +1,15 @@
 import instance from "../api/axios";
 import MovieModal from "./MovieModal";
 import "./styles/Row.css";
-import { useCallback, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import styled from "styled-components";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 const Row = ({ title, id, fetchUrl }) => {
   const [movies, setMovie] = useState([]);
@@ -16,8 +24,6 @@ const Row = ({ title, id, fetchUrl }) => {
   useEffect(() => {
     const fetchMovieData = async () => {
       const response = await instance.get(fetchUrl);
-      // console.log("백드롭 주소", response.data.results[0].backdrop_path);
-      // console.log("response.data.results : ", response.data.results);
       setMovie(response.data.results);
     };
     fetchMovieData();
@@ -25,45 +31,92 @@ const Row = ({ title, id, fetchUrl }) => {
   }, [fetchUrl]);
 
   return (
-    <div>
+    <Container>
       <h2>{title}</h2>
-      <div className="slider">
-        <div
-          className="slider_arrow-left"
-          onClick={(e) => {
-            console.log(e.target);
-            document.getElementById(id).scrollLeft -= window.innerWidth - 80;
-          }}
-        >
-          <span className="arrow">{"<"}</span>
-        </div>
+      <Swiper
+        // install Swiper modules
+        modules={[Navigation, Pagination, Scrollbar, A11y]}
+        // spaceBetween={50}
+        // slidesPerView={3}
+        breakpoints={{
+          1378: {
+            slidesPerView: 6,
+            slidesPerGroup: 6,
+          },
+          998: {
+            slidesPerView: 5,
+            slidesPerGroup: 5,
+          },
+          625: {
+            slidesPerView: 4,
+            slidesPerGroup: 4,
+          },
+          0: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+          },
+        }}
+        navigation
+        pagination={{ clickable: true }}
+        scrollbar={{ draggable: true }}
+        onSwiper={(swiper) => console.log(swiper)}
+        onSlideChange={() => console.log("slide change")}
+      >
         <div id={id} className="row_posters">
-          {movies.map((e) => (
-            <img
-              key={e.id}
-              className="row_poster"
-              src={`https://image.tmdb.org/t/p/original/${e.backdrop_path}`}
-              alt={e.name}
-              onClick={() => handleClick(e)}
-            />
+          {movies.map((movie) => (
+            <SwiperSlide key={movie.id}>
+              <Wrap>
+                <img
+                  className="row_poster"
+                  src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`}
+                  alt={movie.name}
+                  onClick={() => handleClick(movie)}
+                />
+              </Wrap>
+            </SwiperSlide>
           ))}
         </div>
-        <div
-          className="slider_arrow-right"
-          onClick={(e) => {
-            console.log(e.target);
-            document.getElementById(id).scrollLeft += window.innerWidth - 80;
-          }}
-        >
-          <span className="arrow">{">"}</span>
-        </div>
-      </div>
-
-      {modalOpen && (
+      </Swiper>
+      {modalOpen ? (
         <MovieModal {...movieSelected} setModalOpen={setModalOpen} />
-      )}
-    </div>
+      ) : null}
+    </Container>
   );
 };
+
+const Container = styled.div`
+  padding: 0 0 26px;
+`;
+
+const Wrap = styled.div`
+  width: 100%;
+  height: 20%;
+  padding-top: 56.25%;
+  border-radius: 10px;
+  box-shadow: rgb(0 0 0 /69%) 0px 26px 30px -10px,
+    rgb(0 0 0/73%) 0px 16px 10px -10px;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  transition: all 250ms cubic-bexier(0.25, 0.46, 0.45, 0.94) 0s;
+  border: 3px solid rgba(249, 249, 249, 0.1);
+  img {
+    inset: 0px;
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1;
+    position: absolute;
+    transition: opacity 500ms ease-inout 0s;
+    width: 100%;
+    z-index: 1;
+    top: 0;
+    margin-right: 10px;
+  }
+  &:hover {
+    box-shadow: rgb(0 0 0 /80%) 0px 40px 58px -16px,
+      rgb(0 0 0/72%) 0px 30px 22px -10px;
+  }
+`;
 
 export default Row;
